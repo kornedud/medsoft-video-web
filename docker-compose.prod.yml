@@ -1,0 +1,75 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-teleconsult}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-teleconsult}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-teleconsult} -d ${POSTGRES_DB:-teleconsult}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-teleconsult}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-teleconsult}
+      FRONTEND_ORIGINS: https://${DOMAIN}
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET}
+      COOKIE_SECURE: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_TURN_URL: "turn:${DOMAIN}:3478"
+        VITE_TURN_USER: ${TURN_USER:-teleconsult}
+        VITE_TURN_PASS: ${TURN_PASS:-}
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN}
+    volumes:
+      - ./infra/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+      - frontend
+
+  coturn:
+    image: coturn/coturn:latest
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./infra/coturn/turnserver.conf:/etc/turnserver.conf:ro
+    command:
+      - "-c"
+      - "/etc/turnserver.conf"
+      - "--realm=${DOMAIN}"
+      - "--user=${TURN_USER:-teleconsult}:${TURN_PASS:-changeme}"
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

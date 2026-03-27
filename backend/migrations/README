@@ -1,0 +1,3 @@
+Alembic migrations. Run from `backend/`:
+alembic revision --autogenerate -m "description"
+alembic upgrade head

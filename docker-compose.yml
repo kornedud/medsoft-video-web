@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: teleconsult
+      POSTGRES_PASSWORD: teleconsult
+      POSTGRES_DB: teleconsult
+    ports:
+      # 5432 на хосте часто занят (локальный Postgres, ssh -L …). С хоста: localhost:5433
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U teleconsult -d teleconsult"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      DATABASE_URL: postgresql+asyncpg://teleconsult:teleconsult@db:5432/teleconsult
+      FRONTEND_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+      SESSION_SECRET: docker-dev-change-me-in-production
+      COOKIE_SECURE: "false"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    environment:
+      VITE_API_URL: http://localhost:8000
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  frontend_node_modules:

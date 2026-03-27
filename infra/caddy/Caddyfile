@@ -1,0 +1,29 @@
+{$DOMAIN:localhost} {
+	# API и WebSocket — проксируем на backend
+	handle /auth/* {
+		reverse_proxy backend:8000
+	}
+	handle /rooms/* {
+		reverse_proxy backend:8000
+	}
+	handle /health {
+		reverse_proxy backend:8000
+	}
+	handle /ws/* {
+		reverse_proxy backend:8000
+	}
+	handle /docs* {
+		reverse_proxy backend:8000
+	}
+	handle /openapi.json {
+		reverse_proxy backend:8000
+	}
+	handle /redoc* {
+		reverse_proxy backend:8000
+	}
+
+	# Всё остальное — frontend (статика)
+	handle {
+		reverse_proxy frontend:80
+	}
+}

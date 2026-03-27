@@ -1,0 +1,6 @@
+---
+description: Prefer classic docker-compose CLI for this project
+alwaysApply: true
+---
+
+When suggesting Docker Compose commands for this workspace, use the hyphenated form **`docker-compose`** (for example `docker-compose up --build`), not `docker compose`, unless the user explicitly prefers the plugin.
