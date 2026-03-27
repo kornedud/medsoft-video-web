@@ -33,6 +33,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
+        VITE_API_URL: "https://${DOMAIN}"
         VITE_TURN_URL: "turn:${DOMAIN}:3478"
         VITE_TURN_USER: ${TURN_USER:-teleconsult}
         VITE_TURN_PASS: ${TURN_PASS:-}

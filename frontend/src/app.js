@@ -26,11 +26,11 @@ async function logout() {
 function renderGate(message) {
   root.innerHTML = `
     <main class="shell">
-      <p class="nav"><a href="/">На главную</a></p>
+      <nav class="nav"><a href="/" class="nav-btn">На главную</a></nav>
       <h1>Нужен вход</h1>
       <section class="card" aria-live="polite">
         <p class="status status--err">${escapeHtml(message)}</p>
-        <p class="nav" style="margin-top:1rem"><a href="/login.html">Перейти ко входу</a></p>
+        <nav class="nav" style="margin-top:1rem"><a href="/login.html" class="nav-btn">Перейти ко входу</a></nav>
       </section>
     </main>
   `;
@@ -43,25 +43,28 @@ function renderApp(user, notice) {
       : `<p class="form-msg form-msg--ok" role="status">${escapeHtml(notice)}</p>`;
 
   root.innerHTML = `
+    <div class="user-bar">
+      <span class="user-bar__name">${escapeHtml(user.login)}</span>
+      <button type="button" class="user-bar__logout" id="logout-btn">Выйти</button>
+    </div>
     <main class="shell">
-      <p class="nav"><a href="/">На главную</a> · <a href="/register.html">Регистрация</a></p>
+      <nav class="nav"><a href="/" class="nav-btn">На главную</a></nav>
       ${noticeBlock}
-      <h1>Приложение</h1>
+      <h1>Звонок по ссылке</h1>
+      <p class="hint">Создайте комнату, скопируйте ссылку и отправьте её второму участнику (ему не нужна регистрация).</p>
       <section class="card">
-        <p>Вы вошли как <strong>${escapeHtml(user.login)}</strong> (id: ${user.id}).</p>
-        <h2 class="h2">Звонок по ссылке</h2>
-        <p class="hint">Создайте комнату, скопируйте ссылку и отправьте её второму участнику (ему не нужна регистрация).</p>
         <button type="button" class="btn" id="create-room-btn">Создать звонок</button>
         <div id="room-offer" class="room-offer" hidden>
           <label class="field room-offer__label">
             <span>Ссылка на комнату</span>
             <input type="text" id="room-link" readonly class="room-offer__input" />
           </label>
-          <button type="button" class="btn btn--secondary" id="copy-room-link">Копировать</button>
+          <div class="room-offer__actions">
+            <button type="button" class="btn btn--secondary" id="copy-room-link">Копировать</button>
+            <a id="open-room" href="#" target="_blank" rel="noopener" class="btn">Открыть комнату</a>
+          </div>
           <p class="hint" id="copy-hint" hidden>Ссылка скопирована.</p>
-          <p class="nav" style="margin-top: 0.75rem"><a id="open-room" href="#" target="_blank" rel="noopener">Открыть комнату</a></p>
         </div>
-        <button type="button" class="btn btn--secondary" id="logout-btn">Выйти</button>
       </section>
     </main>
   `;

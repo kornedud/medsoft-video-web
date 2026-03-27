@@ -20,7 +20,7 @@ function renderForm(message, messageKind) {
 
   root.innerHTML = `
     <main class="shell">
-      <p class="nav"><a href="/">На главную</a> · <a href="/login.html">Вход</a></p>
+      <nav class="nav"><a href="/" class="nav-btn">На главную</a><a href="/login.html" class="nav-btn">Вход</a></nav>
       <h1>Регистрация</h1>
       <p class="lead">Создайте логин и пароль по правилам ниже.</p>
       ${msgBlock}
@@ -75,7 +75,7 @@ async function onSubmit(ev) {
       const data = await res.json();
       root.innerHTML = `
         <main class="shell">
-          <p class="nav"><a href="/">На главную</a> · <a href="/login.html">Вход</a> · <a href="/register.html">Ещё аккаунт</a></p>
+          <nav class="nav"><a href="/" class="nav-btn">На главную</a><a href="/login.html" class="nav-btn">Вход</a></nav>
           <h1>Готово</h1>
           <section class="card" aria-live="polite">
             <p class="status status--ok">Регистрация прошла успешно.</p>

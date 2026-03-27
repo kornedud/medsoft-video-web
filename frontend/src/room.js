@@ -73,7 +73,7 @@ async function fetchStatus(shareToken, clientId) {
 function renderCallEnded(message, kind) {
   render(`
     <main class="shell">
-      <p class="nav"><a href="/">На главную</a> · <a href="/app/">Приложение</a></p>
+      <nav class="nav"><a href="/" class="nav-btn">На главную</a></nav>
       <h1>Звонок завершён</h1>
       <section class="card"><p class="status status--${kind}">${escapeHtml(message)}</p></section>
     </main>
@@ -83,7 +83,7 @@ function renderCallEnded(message, kind) {
 function renderError(title, message) {
   render(`
     <main class="shell">
-      <p class="nav"><a href="/">На главную</a> · <a href="/app/">Приложение</a></p>
+      <nav class="nav"><a href="/" class="nav-btn">На главную</a></nav>
       <h1>${escapeHtml(title)}</h1>
       <section class="card"><p class="status status--err">${escapeHtml(message)}</p></section>
     </main>
@@ -191,7 +191,7 @@ function startCall(shareToken, clientId, roomData) {
   function hangup() {
     if (ended) return;
     cleanup();
-    renderCallEnded("Вы завершили звонок.", "ok");
+    renderCallEnded("Вы завершили звонок", "ok");
   }
 
   function sendSignal(payload) {
