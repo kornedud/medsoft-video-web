@@ -58,7 +58,7 @@ export async function addIceCandidate(pc, candidate) {
   try {
     await pc.addIceCandidate(new RTCIceCandidate(candidate));
   } catch {
-    /* late candidates after close — ignore */
+    /* ignore */
   }
 }
 

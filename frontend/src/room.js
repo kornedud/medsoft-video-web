@@ -70,20 +70,14 @@ async function fetchStatus(shareToken, clientId) {
   return fetch(u.toString(), { credentials: "include" });
 }
 
-function renderCallEnded(message, kind) {
-  render(`
-    <main class="shell">
-      <nav class="nav"><a href="/" class="nav-btn">На главную</a></nav>
-      <h1>Звонок завершён</h1>
-      <section class="card"><p class="status status--${kind}">${escapeHtml(message)}</p></section>
-    </main>
-  `);
+function renderCallEnded() {
+  window.location.href = "/app/";
 }
 
 function renderError(title, message) {
   render(`
     <main class="shell">
-      <nav class="nav"><a href="/" class="nav-btn">На главную</a></nav>
+      <nav class="nav"><a href="/app/" class="nav-btn">На главную</a></nav>
       <h1>${escapeHtml(title)}</h1>
       <section class="card"><p class="status status--err">${escapeHtml(message)}</p></section>
     </main>
@@ -191,7 +185,7 @@ function startCall(shareToken, clientId, roomData) {
   function hangup() {
     if (ended) return;
     cleanup();
-    renderCallEnded("Вы завершили звонок", "ok");
+    renderCallEnded();
   }
 
   function sendSignal(payload) {
@@ -288,7 +282,7 @@ function startCall(shareToken, clientId, roomData) {
       }
       if (m.event === "room_ended") {
         cleanup();
-        renderCallEnded("Звонок завершён создателем.", "err");
+        renderCallEnded();
       }
       return;
     }

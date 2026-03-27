@@ -634,6 +634,10 @@ h1 {
   z-index: 1000;
 }
 
+.call-modal-overlay[hidden] {
+  display: none;
+}
+
 .call-modal {
   background: #fff;
   border-radius: 1rem;

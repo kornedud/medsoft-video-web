@@ -26,7 +26,7 @@ async function logout() {
 function renderGate(message) {
   root.innerHTML = `
     <main class="shell">
-      <nav class="nav"><a href="/" class="nav-btn">На главную</a></nav>
+      <nav class="nav"><a href="/app/" class="nav-btn">На главную</a></nav>
       <h1>Нужен вход</h1>
       <section class="card" aria-live="polite">
         <p class="status status--err">${escapeHtml(message)}</p>
@@ -82,7 +82,7 @@ function renderApp(currentUser, notice) {
           <div class="sidebar__loading">Загрузка…</div>
         </div>
         <div class="sidebar__footer">
-          <a href="/" class="sidebar__home-link">На главную</a>
+          <a href="/app/" class="sidebar__home-link">На главную</a>
         </div>
       </aside>
       <main class="app-main">

@@ -20,7 +20,7 @@ function renderForm(message, messageKind) {
 
   root.innerHTML = `
     <main class="shell">
-      <nav class="nav"><a href="/" class="nav-btn">На главную</a><a href="/register.html" class="nav-btn">Регистрация</a></nav>
+      <nav class="nav"><a href="/app/" class="nav-btn">На главную</a><a href="/register.html" class="nav-btn">Регистрация</a></nav>
       <h1>Вход</h1>
       <p class="lead">Войдите под существующим логином.</p>
       ${msgBlock}
@@ -71,7 +71,7 @@ async function onSubmit(ev) {
     if (res.ok) {
       const data = await res.json();
       sessionStorage.setItem("authNotice", data.message || "Вход выполнен успешно.");
-      window.location.href = "/";
+      window.location.href = "/app/";
       return;
     }
 

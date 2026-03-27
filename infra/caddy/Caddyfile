@@ -2,7 +2,8 @@
 	handle /auth/* {
 		reverse_proxy backend:8000
 	}
-	handle /rooms/* {
+	@rooms path /rooms /rooms/*
+	handle @rooms {
 		reverse_proxy backend:8000
 	}
 	handle /health {
@@ -20,6 +21,8 @@
 	handle /redoc* {
 		reverse_proxy backend:8000
 	}
+
+	redir / /app/ permanent
 
 	handle {
 		reverse_proxy frontend:80
