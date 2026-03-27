@@ -1,5 +1,5 @@
 import "./style.css";
-import { apiUrl, readApiError } from "./api.js";
+import { apiUrl } from "./api.js";
 
 const root = document.getElementById("app");
 
@@ -52,57 +52,13 @@ function renderUser(user) {
       <h1>Телеконсультация</h1>
       <p class="lead">Видеозвонки в браузере</p>
       <section class="card">
-        <p class="hint" style="margin-bottom:0.75rem">Создайте комнату, скопируйте ссылку и отправьте её второму участнику.</p>
-        <button type="button" class="btn" id="create-room-btn">Создать звонок</button>
-        <div id="room-offer" class="room-offer" hidden>
-          <label class="field room-offer__label">
-            <span>Ссылка на комнату</span>
-            <input type="text" id="room-link" readonly class="room-offer__input" />
-          </label>
-          <div class="room-offer__actions">
-            <button type="button" class="btn btn--secondary" id="copy-room-link">Копировать</button>
-            <a id="open-room" href="#" target="_blank" rel="noopener" class="btn">Открыть комнату</a>
-          </div>
-          <p class="hint" id="copy-hint" hidden>Ссылка скопирована.</p>
-        </div>
+        <a href="/app/" class="btn" style="margin-bottom:0.75rem;text-decoration:none;display:inline-flex">Перейти к звонкам</a>
+        <p class="hint">Позвоните зарегистрированным пользователям или создайте комнату по ссылке.</p>
       </section>
     </main>
   `;
 
   document.getElementById("logout-btn").addEventListener("click", () => logout());
-
-  const offer = document.getElementById("room-offer");
-  const linkInput = document.getElementById("room-link");
-  const copyHint = document.getElementById("copy-hint");
-  const openRoom = document.getElementById("open-room");
-
-  document.getElementById("create-room-btn").addEventListener("click", async () => {
-    const res = await fetch(apiUrl("/rooms"), {
-      method: "POST",
-      credentials: "include",
-    });
-    if (!res.ok) {
-      alert(await readApiError(res));
-      return;
-    }
-    const data = await res.json();
-    const url = `${window.location.origin}/room.html?t=${encodeURIComponent(data.share_token)}`;
-    linkInput.value = url;
-    openRoom.href = url;
-    offer.hidden = false;
-    copyHint.hidden = true;
-  });
-
-  document.getElementById("copy-room-link").addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(linkInput.value);
-      copyHint.hidden = false;
-    } catch {
-      linkInput.select();
-      document.execCommand("copy");
-      copyHint.hidden = false;
-    }
-  });
 }
 
 async function main() {

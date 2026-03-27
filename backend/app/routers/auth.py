@@ -86,3 +86,12 @@ async def logout(response: Response) -> MessageResponse:
 @router.get("/me", response_model=UserPublic)
 async def me(user: User = Depends(get_current_user)) -> UserPublic:
     return UserPublic(id=user.id, login=user.login)
+
+
+@router.get("/users", response_model=list[UserPublic])
+async def list_users(
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> list[UserPublic]:
+    all_users = await users_service.get_all_users(db)
+    return [UserPublic(id=u.id, login=u.login) for u in all_users if u.id != user.id]

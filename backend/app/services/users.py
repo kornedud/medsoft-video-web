@@ -27,6 +27,11 @@ async def get_user_by_login(session: AsyncSession, login: str) -> User | None:
     return r.scalar_one_or_none()
 
 
+async def get_all_users(session: AsyncSession) -> list[User]:
+    r = await session.execute(select(User).order_by(User.login))
+    return list(r.scalars().all())
+
+
 async def create_user(session: AsyncSession, login: str, password: str) -> User:
     user = User(login=login, password_hash=hash_password(password))
     session.add(user)

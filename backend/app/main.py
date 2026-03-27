@@ -9,6 +9,7 @@ from app.config import settings
 from app.db import check_db_connection, get_db
 from app.routers.auth import router as auth_router
 from app.routers.rooms import router as rooms_router
+from app.routers.ws_presence import router as ws_presence_router
 from app.routers.ws_signaling import router as ws_signaling_router
 
 
@@ -32,6 +33,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(rooms_router)
 app.include_router(ws_signaling_router)
+app.include_router(ws_presence_router)
 
 
 @app.get("/health")

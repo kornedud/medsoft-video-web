@@ -12,6 +12,17 @@ export function apiUrl(path) {
   return base ? `${base}${p}` : `/api${p}`;
 }
 
+export function wsPresenceUrl() {
+  const path = "/ws/presence";
+  const base = apiBase();
+  if (base) {
+    const ws = base.replace(/^http/, "ws");
+    return `${ws}${path}`;
+  }
+  const proto = location.protocol === "https:" ? "wss:" : "ws:";
+  return `${proto}//${location.host}${path}`;
+}
+
 export function wsRoomUrl(shareToken, clientId) {
   const encTok = encodeURIComponent(shareToken);
   const encCid = encodeURIComponent(clientId);
